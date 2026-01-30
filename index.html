@@ -1,3 +1,7 @@
+<!-- index.html (Frontend)
+Guarda como index.html, abre en el navegador o súbelo a Netlify / GitHub Pages.
+Tu ENDPOINT_URL ya está configurado con tu URL.
+-->
 <!doctype html>
 <html lang="es">
 <head>
@@ -8,224 +12,369 @@
   <style>
     :root{
       --bg:#0b0f19;
-      --card:#121a2b;
-      --muted:#8ea0c6;
       --text:#e9efff;
-      --border: rgba(255,255,255,.10);
-      --border2: rgba(255,255,255,.16);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --muted:#8ea0c6;
+      --border: rgba(255,255,255,.12);
+      --border2: rgba(255,255,255,.18);
+      --panel: rgba(255,255,255,.04);
+      --panel2: rgba(0,0,0,.25);
+      --shadow: 0 14px 34px rgba(0,0,0,.35);
       --radius: 16px;
     }
 
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 600px at 20% 0%, rgba(96,165,250,.18), transparent 60%),
+        radial-gradient(1000px 500px at 90% 10%, rgba(34,197,94,.14), transparent 55%),
+        var(--bg);
       color: var(--text);
     }
 
     .wrap{
       max-width: 980px;
       margin: 0 auto;
-      padding: 20px 14px 60px;
+      padding: 22px 14px 70px;
     }
 
-    h1{ font-size: 22px; margin-bottom: 6px; }
-    p{ color: var(--muted); font-size: 14px; }
+    h1{
+      margin: 0 0 6px;
+      font-size: 22px;
+      letter-spacing: .2px;
+    }
+
+    .sub{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      max-width: 75ch;
+    }
 
     .meta{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin: 16px 0;
+      gap: 10px;
+      margin: 14px 0 16px;
     }
 
-    input{
+    .meta input{
       width:100%;
-      padding:10px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:#00000033;
-      color:var(--text);
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      outline:none;
+      box-shadow: var(--shadow);
+      font-size: 14px;
     }
 
-    .matrix{
+    /* ===== Eisenhower Matrix Layout ===== */
+    .eisenhower{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
+      grid-template-columns: 120px 1fr 1fr;
+      grid-template-rows: 40px auto auto;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .corner{
+      border: 1px dashed rgba(255,255,255,.12);
+      border-radius: 14px;
+      background: rgba(255,255,255,.02);
+    }
+
+    .col-title{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .8px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .row-title{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .8px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
     }
 
     .quad{
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:12px;
-      background:#00000033;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height: 220px;
     }
 
-    .quad h3{
-      font-size:14px;
-      margin:0 0 6px;
+    .quad-header{
+      padding: 12px 12px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.02);
     }
 
-    textarea{
+    .qname{
+      margin:0;
+      font-size: 14px;
+      font-weight: 700;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+
+    .badge{
+      font-size: 11px;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border2);
+      background: rgba(0,0,0,.12);
+      white-space: nowrap;
+    }
+
+    .qhint{
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .quad textarea{
+      flex:1;
       width:100%;
-      min-height:70px;
-      margin-top:6px;
-      padding:8px;
-      border-radius:10px;
-      border:1px solid var(--border);
-      background:#00000055;
-      color:var(--text);
-    }
-
-    button{
-      margin-top:6px;
-      padding:8px 12px;
-      border-radius:10px;
-      border:1px solid var(--border2);
-      background:#ffffff14;
-      color:var(--text);
-      cursor:pointer;
-    }
-
-    .items{
-      margin-top:8px;
-      font-size:13px;
-    }
-
-    .item{
-      border:1px solid var(--border);
-      border-radius:10px;
-      padding:6px;
-      margin-top:4px;
+      border: none;
+      outline: none;
+      padding: 12px;
+      background: var(--panel2);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.4;
+      resize: vertical;
+      min-height: 140px;
     }
 
     .footer{
-      margin-top:16px;
+      margin-top: 16px;
       display:flex;
-      justify-content:space-between;
       align-items:center;
-      gap:12px;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+    }
+
+    .status{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .actions{
+      display:flex;
+      gap: 10px;
       flex-wrap:wrap;
     }
 
+    button{
+      border: 1px solid var(--border2);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor:pointer;
+    }
+    button:hover{ background: rgba(255,255,255,.10); }
+
+    .primary{
+      border-color: rgba(96,165,250,.50);
+      background: rgba(96,165,250,.16);
+    }
+    .primary:hover{ background: rgba(96,165,250,.22); }
+
+    /* Mobile: stack quadrants, hide axis labels */
     @media (max-width: 720px){
-      .meta, .matrix{
+      .meta{ grid-template-columns: 1fr; }
+      .eisenhower{
         grid-template-columns: 1fr;
+        grid-template-rows: auto;
       }
+      .corner, .col-title, .row-title{ display:none; }
+      .quad{ min-height: auto; }
     }
   </style>
 </head>
 
 <body>
-<div class="wrap">
-  <h1>Matriz de Eisenhower</h1>
-  <p>Escribe tus tareas directamente en el cuadrante correcto y luego presiona <strong>Submit</strong>.</p>
+  <div class="wrap">
+    <h1>Matriz de Eisenhower</h1>
+    <p class="sub">
+      Escribe <strong>una tarea por línea</strong> en cada cuadrante. Luego presiona <strong>Submit</strong> para registrar todo.
+    </p>
 
-  <div class="meta">
-    <input id="nombre" placeholder="Nombre (opcional)">
-    <input id="equipo" placeholder="Equipo / Rol (opcional)">
+    <div class="meta">
+      <input id="nombre" placeholder="Nombre (opcional)" />
+      <input id="equipo" placeholder="Equipo / Rol (opcional)" />
+    </div>
+
+    <div class="eisenhower">
+      <div class="corner"></div>
+      <div class="col-title">URGENTE</div>
+      <div class="col-title">NO URGENTE</div>
+
+      <div class="row-title">IMPORTANTE</div>
+
+      <div class="quad">
+        <div class="quad-header">
+          <p class="qname">🔥 Hacer ahora <span class="badge">Imp: Alta · Urg: Alta</span></p>
+          <p class="qhint">Alta prioridad e inmediata. Acción hoy.</p>
+        </div>
+        <textarea id="iu" placeholder="Ej:\nRevisar bug en producción\nEnviar arte final a cliente\nAprobar copy para campaña"></textarea>
+      </div>
+
+      <div class="quad">
+        <div class="quad-header">
+          <p class="qname">📅 Planificar <span class="badge">Imp: Alta · Urg: Baja</span></p>
+          <p class="qhint">Importante, pero puede calendarizarse.</p>
+        </div>
+        <textarea id="in" placeholder="Ej:\nDocumentar proceso\nDefinir roadmap\nPreparar backlog"></textarea>
+      </div>
+
+      <div class="row-title">NO IMPORTANTE</div>
+
+      <div class="quad">
+        <div class="quad-header">
+          <p class="qname">🤝 Delegar <span class="badge">Imp: Baja · Urg: Alta</span></p>
+          <p class="qhint">Urgente, pero no requiere tu foco principal.</p>
+        </div>
+        <textarea id="nu" placeholder="Ej:\nResponder correo rutinario\nActualizar status en ticket\nAgendar reunión"></textarea>
+      </div>
+
+      <div class="quad">
+        <div class="quad-header">
+          <p class="qname">🗑 Eliminar <span class="badge">Imp: Baja · Urg: Baja</span></p>
+          <p class="qhint">Bajo impacto. Evitar o posponer.</p>
+        </div>
+        <textarea id="nn" placeholder="Ej:\nRevisar algo “por si acaso”\nPerfeccionar detalles no críticos\nTareas sin dueño"></textarea>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="status" id="status">Listo para enviar.</div>
+      <div class="actions">
+        <button id="clear">Limpiar</button>
+        <button class="primary" id="submit">Submit</button>
+      </div>
+    </div>
   </div>
 
-  <div class="matrix" id="matrix"></div>
+  <script>
+    const ENDPOINT_URL =
+      "https://script.google.com/macros/s/AKfycbzHUHW_PM19ivcyYtMXIlATVjXLmCwAPhSoFNk6W_4WcWvHJW5zjs-0CXPwysZbSlTw/exec";
 
-  <div class="footer">
-    <div id="status">Tareas agregadas: 0</div>
-    <button onclick="submitAll()">Submit</button>
-  </div>
-</div>
+    function parseLines(text){
+      return (text || "")
+        .split("\n")
+        .map(s => s.trim())
+        .filter(Boolean);
+    }
 
-<script>
-/* ===== CONFIG ===== */
-const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbzHUHW_PM19ivcyYtMXIlATVjXLmCwAPhSoFNk6W_4WcWvHJW5zjs-0CXPwysZbSlTw/exec";
+    function setStatus(html){
+      document.getElementById("status").innerHTML = html;
+    }
 
-const QUADRANTS = [
-  { key:"IU", label:"🔥 Importante + Urgente", importance:"Alta", urgency:"Alta" },
-  { key:"IN", label:"📅 Importante + No urgente", importance:"Alta", urgency:"Baja" },
-  { key:"NU", label:"🤝 No importante + Urgente", importance:"Baja", urgency:"Alta" },
-  { key:"NN", label:"🗑 No importante + No urgente", importance:"Baja", urgency:"Baja" }
-];
+    function collectItems(){
+      const map = [
+        { id: "iu", quadrantLabel: "🔥 Importante + Urgente", importance: "Alta", urgency: "Alta" },
+        { id: "in", quadrantLabel: "📅 Importante + No urgente", importance: "Alta", urgency: "Baja" },
+        { id: "nu", quadrantLabel: "🤝 No importante + Urgente", importance: "Baja", urgency: "Alta" },
+        { id: "nn", quadrantLabel: "🗑 No importante + No urgente", importance: "Baja", urgency: "Baja" }
+      ];
 
-let items = [];
-
-function render(){
-  const matrix = document.getElementById("matrix");
-  matrix.innerHTML = "";
-
-  QUADRANTS.forEach(q => {
-    const div = document.createElement("div");
-    div.className = "quad";
-    div.innerHTML = `
-      <h3>${q.label}</h3>
-      <textarea placeholder="Escribe una tarea..."></textarea>
-      <button>Agregar</button>
-      <div class="items"></div>
-    `;
-
-    const textarea = div.querySelector("textarea");
-    const btn = div.querySelector("button");
-    const list = div.querySelector(".items");
-
-    btn.onclick = () => {
-      if (!textarea.value.trim()) return;
-      items.push({
-        quadrantLabel: q.label,
-        importance: q.importance,
-        urgency: q.urgency,
-        task: textarea.value.trim()
+      const items = [];
+      map.forEach(q => {
+        const text = document.getElementById(q.id).value;
+        parseLines(text).forEach(task => {
+          items.push({
+            quadrantLabel: q.quadrantLabel,
+            importance: q.importance,
+            urgency: q.urgency,
+            task
+          });
+        });
       });
-      textarea.value = "";
-      update();
-    };
 
-    matrix.appendChild(div);
-  });
-}
+      return items;
+    }
 
-function update(){
-  document.getElementById("status").textContent = `Tareas agregadas: ${items.length}`;
-  document.querySelectorAll(".items").forEach(el => el.innerHTML = "");
-  items.forEach(it => {
-    const idx = QUADRANTS.findIndex(q => q.label === it.quadrantLabel);
-    const container = document.querySelectorAll(".items")[idx];
-    const d = document.createElement("div");
-    d.className = "item";
-    d.textContent = it.task;
-    container.appendChild(d);
-  });
-}
+    async function submitMatrix(){
+      const items = collectItems();
+      if (!items.length){
+        alert("Escribe al menos una tarea (una por línea) en cualquier cuadrante.");
+        return;
+      }
 
-async function submitAll(){
-  if (!items.length) {
-    alert("Agrega al menos una tarea");
-    return;
-  }
+      const payload = {
+        nombre: document.getElementById("nombre").value.trim(),
+        equipo: document.getElementById("equipo").value.trim(),
+        items
+      };
 
-  const payload = {
-    nombre: document.getElementById("nombre").value,
-    equipo: document.getElementById("equipo").value,
-    items
-  };
+      setStatus(`Enviando… <strong>${items.length}</strong> tarea(s)`);
 
-  document.getElementById("status").textContent = "Enviando…";
+      try {
+        const res = await fetch(ENDPOINT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
 
-  const res = await fetch(ENDPOINT_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload)
-  });
+        const data = await res.json().catch(() => ({}));
 
-  if (res.ok) {
-    items = [];
-    update();
-    document.getElementById("status").textContent = "✅ Enviado correctamente";
-  } else {
-    document.getElementById("status").textContent = "❌ Error al enviar";
-  }
-}
+        if (!res.ok || !data.ok){
+          throw new Error(data.error || `HTTP ${res.status}`);
+        }
 
-render();
-</script>
+        setStatus(`✅ Enviado. Se registraron <strong>${data.inserted}</strong> tarea(s).`);
+        document.querySelectorAll("textarea").forEach(t => t.value = "");
+      } catch (err) {
+        console.error(err);
+        setStatus(`❌ Error al enviar: <strong>${String(err.message || err)}</strong>`);
+        alert("Hubo un error al enviar. Revisa la consola (F12) o vuelve a intentar.");
+      }
+    }
+
+    function clearAll(){
+      if (!confirm("¿Seguro que quieres limpiar los cuatro cuadrantes?")) return;
+      document.querySelectorAll("textarea").forEach(t => t.value = "");
+      setStatus("Listo para enviar.");
+    }
+
+    document.getElementById("submit").addEventListener("click", submitMatrix);
+    document.getElementById("clear").addEventListener("click", clearAll);
+  </script>
 </body>
 </html>
