@@ -107,4 +107,195 @@
       font-size: 14px;
       font-weight:700;
       display:flex;
-      justify-content:space-be
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+
+    .badge{
+      font-size:11px;
+      color: var(--muted);
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border2);
+      background: rgba(0,0,0,.12);
+    }
+
+    .quad textarea{
+      flex:1;
+      width:100%;
+      border:none;
+      outline:none;
+      padding:12px;
+      background: var(--panel2);
+      color: var(--text);
+      font-size:14px;
+      line-height:1.4;
+      resize:vertical;
+      min-height:140px;
+    }
+
+    .footer{
+      margin-top: 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 12px;
+      flex-wrap:wrap;
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+    }
+
+    .status{
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    button{
+      border: 1px solid var(--border2);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor:pointer;
+    }
+
+    .primary{
+      border-color: rgba(96,165,250,.5);
+      background: rgba(96,165,250,.16);
+    }
+
+    @media (max-width: 720px){
+      .meta{ grid-template-columns: 1fr; }
+      .eisenhower{ grid-template-columns: 1fr; }
+      .corner, .col-title, .row-title{ display:none; }
+      .quad{ min-height:auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>Matriz de Eisenhower</h1>
+    <p class="sub">Escribe una tarea por línea en cada cuadrante y luego presiona <strong>Submit</strong>.</p>
+
+    <div class="meta">
+      <input id="nombre" placeholder="Nombre (opcional)" />
+      <input id="equipo" placeholder="Equipo / Rol (opcional)" />
+    </div>
+
+    <div class="eisenhower">
+      <div class="corner"></div>
+      <div class="col-title">URGENTE</div>
+      <div class="col-title">NO URGENTE</div>
+
+      <div class="row-title">IMPORTANTE</div>
+
+      <div class="quad">
+        <div class="quad-header">
+          <p class="qname">IMPORTANTE · URGENTE <span class="badge">Alta / Alta</span></p>
+        </div>
+        <textarea id="iu" placeholder="Una tarea por línea"></textarea>
+      </div>
+
+      <div class="quad">
+        <div class="quad-header">
+          <p class="qname">IMPORTANTE · NO URGENTE <span class="badge">Alta / Baja</span></p>
+        </div>
+        <textarea id="in" placeholder="Una tarea por línea"></textarea>
+      </div>
+
+      <div class="row-title">NO IMPORTANTE</div>
+
+      <div class="quad">
+        <div class="quad-header">
+          <p class="qname">NO IMPORTANTE · URGENTE <span class="badge">Baja / Alta</span></p>
+        </div>
+        <textarea id="nu" placeholder="Una tarea por línea"></textarea>
+      </div>
+
+      <div class="quad">
+        <div class="quad-header">
+          <p class="qname">NO IMPORTANTE · NO URGENTE <span class="badge">Baja / Baja</span></p>
+        </div>
+        <textarea id="nn" placeholder="Una tarea por línea"></textarea>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="status" id="status">Listo para enviar.</div>
+      <button class="primary" id="submit">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    const ENDPOINT_URL =
+      "https://script.google.com/macros/s/AKfycbzHUHW_PM19ivcyYtMXIlATVjXLmCwAPhSoFNk6W_4WcWvHJW5zjs-0CXPwysZbSlTw/exec";
+
+    function parseLines(text){
+      return (text || "")
+        .split("\n")
+        .map(t => t.trim())
+        .filter(Boolean);
+    }
+
+    async function submitMatrix(){
+      const map = [
+        { id:"iu", quadrantLabel:"Importante / Urgente", importance:"Alta", urgency:"Alta" },
+        { id:"in", quadrantLabel:"Importante / No urgente", importance:"Alta", urgency:"Baja" },
+        { id:"nu", quadrantLabel:"No importante / Urgente", importance:"Baja", urgency:"Alta" },
+        { id:"nn", quadrantLabel:"No importante / No urgente", importance:"Baja", urgency:"Baja" }
+      ];
+
+      const items = [];
+      map.forEach(q => {
+        const value = document.getElementById(q.id).value;
+        parseLines(value).forEach(task => {
+          items.push({
+            quadrantLabel: q.quadrantLabel,
+            importance: q.importance,
+            urgency: q.urgency,
+            task
+          });
+        });
+      });
+
+      if (!items.length){
+        alert("Escribe al menos una tarea.");
+        return;
+      }
+
+      const payload = {
+        nombre: document.getElementById("nombre").value.trim(),
+        equipo: document.getElementById("equipo").value.trim(),
+        items
+      };
+
+      document.getElementById("status").textContent = "Enviando…";
+
+      try {
+        const res = await fetch(ENDPOINT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+        document.getElementById("status").textContent = `✅ Enviado (${data.inserted} tareas)`;
+        document.querySelectorAll("textarea").forEach(t => t.value = "");
+      } catch (err) {
+        console.error(err);
+        document.getElementById("status").textContent = "❌ Error al enviar";
+      }
+    }
+
+    document.getElementById("submit").addEventListener("click", submitMatrix);
+  </script>
+</body>
+</html>
